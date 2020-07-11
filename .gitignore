@@ -115,3 +115,8 @@ dist
 
 # MacOS file
 .DS_Store
+
+# Temp folder
+temp/
+temp/*
+!temp/.gitkeep
