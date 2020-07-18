@@ -1,3 +1,3 @@
 # Go Barber
 
-This project was creted using my [NodeJS template](https://github.com/tatianalopes/node-js-project-template).
+This project was creted using my [Web project template](https://github.com/tatianalopes/web-project-template).
