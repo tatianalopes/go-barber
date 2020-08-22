@@ -1,8 +1,8 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import ShowProfileService from "./ShowProfileService";
+import AppError from '@shared/errors/AppError';
+import ShowProfileService from './ShowProfileService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import AppError from "@shared/errors/AppError";
 
 let fakeUsersRepository: FakeUsersRepository;
 
@@ -37,7 +37,7 @@ describe('ShowProfile', () => {
     await expect(
       showProfile.execute({
         user_id: 'non-existing user ID',
-      })
+      }),
     ).rejects.toBeInstanceOf(AppError);
   });
-})
+});

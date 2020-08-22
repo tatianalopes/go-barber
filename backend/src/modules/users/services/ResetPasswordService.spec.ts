@@ -1,10 +1,10 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
+import AppError from '@shared/errors/AppError';
 import ResetPasswordService from './ResetPasswordService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import AppError from "@shared/errors/AppError";
-import FakeUserTokensRepository from "../repositories/fakes/FakeUserTokensRepository";
-import FakeHashProvider from "../providers/HashProvider/fakes/FakeHashProvider";
+import FakeUserTokensRepository from '../repositories/fakes/FakeUserTokensRepository';
+import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeUserTokensRepository: FakeUserTokensRepository;
@@ -18,7 +18,11 @@ describe('ResetPassword', () => {
     fakeUserTokensRepository = new FakeUserTokensRepository();
     fakeHashProvider = new FakeHashProvider();
 
-    resetPassword = new ResetPasswordService(fakeUsersRepository, fakeUserTokensRepository, fakeHashProvider);
+    resetPassword = new ResetPasswordService(
+      fakeUsersRepository,
+      fakeUserTokensRepository,
+      fakeHashProvider,
+    );
   });
 
   it('should be able to reset the password', async () => {
@@ -56,7 +60,8 @@ describe('ResetPassword', () => {
       resetPassword.execute({
         token,
         password,
-    })).rejects.toBeInstanceOf(AppError);
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to reset the password with non-existing user', async () => {
@@ -69,7 +74,8 @@ describe('ResetPassword', () => {
       resetPassword.execute({
         token,
         password,
-    })).rejects.toBeInstanceOf(AppError);
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to reset the password if passed more than 2 hours', async () => {
@@ -99,4 +105,4 @@ describe('ResetPassword', () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
-})
+});

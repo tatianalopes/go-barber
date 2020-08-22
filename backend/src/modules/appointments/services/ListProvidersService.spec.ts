@@ -1,7 +1,7 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import ListProvidersService from "./ListProvidersService";
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
+import ListProvidersService from './ListProvidersService';
 
 let fakeUsersRepository: FakeUsersRepository;
 
@@ -37,4 +37,4 @@ describe('ListProviders', () => {
 
     expect(provides).toEqual([user1, user2]);
   });
-})
+});
