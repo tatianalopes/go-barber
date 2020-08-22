@@ -7,14 +7,17 @@ import IFindAllInMonthProviderDto from '@modules/appointments/dtos/IFindAllInMon
 import IFindAllInDayProviderDto from '@modules/appointments/dtos/IFindAllInDayProviderDto';
 
 class AppointmentsRepository implements IAppointmentsRepository {
-
   private ormRepository: Repository<Appointment>;
 
   constructor() {
     this.ormRepository = getRepository(Appointment);
   }
 
-  public async create({ provider_id, user_id, date }: ICreateAppointmentDto): Promise<Appointment> {
+  public async create({
+    provider_id,
+    user_id,
+    date,
+  }: ICreateAppointmentDto): Promise<Appointment> {
     const appointment = this.ormRepository.create({
       provider_id,
       user_id,
@@ -33,32 +36,43 @@ class AppointmentsRepository implements IAppointmentsRepository {
     return findAppointment;
   }
 
-  public async findAllInMonthFromProvider({ provider_id, month, year }: IFindAllInMonthProviderDto): Promise<Appointment[]> {
+  public async findAllInMonthFromProvider({
+    provider_id,
+    month,
+    year,
+  }: IFindAllInMonthProviderDto): Promise<Appointment[]> {
     const parsedMonth = String(month).padStart(2, '0');
 
     const appointments = await this.ormRepository.find({
       where: {
         provider_id,
-        date: Raw(dateFieldName =>
-          `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth}-${year}'`
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth}-${year}'`,
         ),
-      }
+      },
     });
 
     return appointments;
   }
 
-  public async findAllInDayFromProvider({ provider_id, day, month, year }: IFindAllInDayProviderDto): Promise<Appointment[]> {
+  public async findAllInDayFromProvider({
+    provider_id,
+    day,
+    month,
+    year,
+  }: IFindAllInDayProviderDto): Promise<Appointment[]> {
     const parsedDay = String(day).padStart(2, '0');
     const parsedMonth = String(month).padStart(2, '0');
 
     const appointments = await this.ormRepository.find({
       where: {
         provider_id,
-        date: Raw(dateFieldName =>
-          `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),
-      }
+      },
     });
 
     return appointments;
