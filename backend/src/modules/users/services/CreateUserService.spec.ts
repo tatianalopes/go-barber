@@ -1,9 +1,9 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
+import AppError from '@shared/errors/AppError';
 import CreateUserService from './CreateUserService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
-import AppError from "@shared/errors/AppError";
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
@@ -41,10 +41,12 @@ describe('CreateUser', () => {
       password,
     });
 
-    await expect(createUser.execute({
-      name,
-      email,
-      password,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      createUser.execute({
+        name,
+        email,
+        password,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
-})
+});

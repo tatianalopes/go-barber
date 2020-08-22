@@ -1,10 +1,10 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
+import AppError from '@shared/errors/AppError';
 import CreateUserService from './CreateUserService';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import AppError from "@shared/errors/AppError";
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
@@ -18,7 +18,10 @@ describe('AuthenticateUser', () => {
     fakeHashProvider = new FakeHashProvider();
 
     createUser = new CreateUserService(fakeUsersRepository, fakeHashProvider);
-    authenticateUser = new AuthenticateUserService(fakeUsersRepository, fakeHashProvider);
+    authenticateUser = new AuthenticateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
   });
 
   it('should be able to authenticate', async () => {
@@ -35,7 +38,7 @@ describe('AuthenticateUser', () => {
     const response = await authenticateUser.execute({
       email,
       password,
-    })
+    });
 
     expect(response).toHaveProperty('token');
     expect(response.user).toEqual(user);
@@ -45,10 +48,12 @@ describe('AuthenticateUser', () => {
     const email = 'johndoe@example.com';
     const password = '123456';
 
-    await expect(authenticateUser.execute({
-      email,
-      password,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      authenticateUser.execute({
+        email,
+        password,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to authenticate with wrong password', async () => {
@@ -62,9 +67,11 @@ describe('AuthenticateUser', () => {
       password,
     });
 
-    await expect(authenticateUser.execute({
-      email,
-      password: 'wrong-password',
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      authenticateUser.execute({
+        email,
+        password: 'wrong-password',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
-})
+});

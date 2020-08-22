@@ -26,6 +26,9 @@
     "rules": {
         "prettier/prettier": "error",
         "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
+        "camelcase": "off",
+        "@typescript-eslint/camelcase": "off",
+        "class-methods-use-this": "off",
         "no-useless-constructor": "off",
         "import/extensions": [
             "error",

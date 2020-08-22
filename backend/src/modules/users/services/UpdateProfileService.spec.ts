@@ -1,9 +1,9 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import UpdateProfileService from "./UpdateProfileService";
-import FakeHashProvider from "../providers/HashProvider/fakes/FakeHashProvider";
+import AppError from '@shared/errors/AppError';
+import UpdateProfileService from './UpdateProfileService';
+import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import AppError from "@shared/errors/AppError";
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
@@ -15,7 +15,10 @@ describe('UpdateProfile', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
 
-    updateProfile = new UpdateProfileService(fakeUsersRepository, fakeHashProvider);
+    updateProfile = new UpdateProfileService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
   });
 
   it('should be able to update the profile', async () => {
@@ -43,11 +46,13 @@ describe('UpdateProfile', () => {
   it('should not be able to update profile from a non-existing user', async () => {
     const name = 'John Doe';
     const email = 'johndoe@example.com';
-    await expect(updateProfile.execute({
-      user_id: 'non-existing user ID',
-      name,
-      email,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      updateProfile.execute({
+        user_id: 'non-existing user ID',
+        name,
+        email,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to chanbge to another user email', async () => {
@@ -69,11 +74,13 @@ describe('UpdateProfile', () => {
       password: password2,
     });
 
-    await expect(updateProfile.execute({
-      user_id: user2.id,
-      name: name1,
-      email: email1,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      updateProfile.execute({
+        user_id: user2.id,
+        name: name1,
+        email: email1,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should be able to update the password', async () => {
@@ -113,12 +120,14 @@ describe('UpdateProfile', () => {
     const newName = 'John Jones';
     const newEmail = 'johnjones@example.com';
     const newPassword = '123123';
-    await expect(updateProfile.execute({
-      user_id: user.id,
-      name: newName,
-      email: newEmail,
-      password: newPassword,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      updateProfile.execute({
+        user_id: user.id,
+        name: newName,
+        email: newEmail,
+        password: newPassword,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should not be able to update the password with wrong old password', async () => {
@@ -134,12 +143,14 @@ describe('UpdateProfile', () => {
     const newName = 'John Jones';
     const newEmail = 'johnjones@example.com';
     const newPassword = '123123';
-    await expect(updateProfile.execute({
-      user_id: user.id,
-      name: newName,
-      email: newEmail,
-      old_password: 'wrong_password',
-      password: newPassword,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      updateProfile.execute({
+        user_id: user.id,
+        name: newName,
+        email: newEmail,
+        old_password: 'wrong_password',
+        password: newPassword,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
-})
+});

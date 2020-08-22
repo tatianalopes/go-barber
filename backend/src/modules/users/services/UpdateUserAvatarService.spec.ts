@@ -1,9 +1,9 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import UpdateUserAvatarService from './UpdateUserAvatarService';
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
+import AppError from '@shared/errors/AppError';
+import UpdateUserAvatarService from './UpdateUserAvatarService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
-import AppError from "@shared/errors/AppError";
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeStorageProvider: FakeStorageProvider;
@@ -15,7 +15,10 @@ describe('UpdateUserAvatar', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeStorageProvider = new FakeStorageProvider();
 
-    updateUserAvatar = new UpdateUserAvatarService(fakeUsersRepository, fakeStorageProvider);
+    updateUserAvatar = new UpdateUserAvatarService(
+      fakeUsersRepository,
+      fakeStorageProvider,
+    );
   });
 
   it('should be able to update user avatar', async () => {
@@ -41,10 +44,12 @@ describe('UpdateUserAvatar', () => {
   it('should not be able to update avatar from non existing user', async () => {
     const avatar = 'avatar.jpg';
 
-    await expect(updateUserAvatar.execute({
-      user_id: 'non-existing-user',
-      avatar_filename: avatar,
-    })).rejects.toBeInstanceOf(AppError);
+    await expect(
+      updateUserAvatar.execute({
+        user_id: 'non-existing-user',
+        avatar_filename: avatar,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('should delete old avatar when updating new one', async () => {
@@ -75,4 +80,4 @@ describe('UpdateUserAvatar', () => {
     expect(deleteFile).toHaveBeenCalledWith(avatar);
     expect(user.avatar).toBe(newAvatar);
   });
-})
+});
