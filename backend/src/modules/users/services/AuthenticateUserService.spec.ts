@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
 import AppError from '@shared/errors/AppError';
-import CreateUserService from './CreateUserService';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import AuthenticateUserService from './AuthenticateUserService';
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
@@ -9,7 +8,6 @@ import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 
-let createUser: CreateUserService;
 let authenticateUser: AuthenticateUserService;
 
 describe('AuthenticateUser', () => {
@@ -17,7 +15,6 @@ describe('AuthenticateUser', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
 
-    createUser = new CreateUserService(fakeUsersRepository, fakeHashProvider);
     authenticateUser = new AuthenticateUserService(
       fakeUsersRepository,
       fakeHashProvider,
@@ -29,7 +26,7 @@ describe('AuthenticateUser', () => {
     const email = 'johndoe@example.com';
     const password = '123456';
 
-    const user = await createUser.execute({
+    const user = await fakeUsersRepository.create({
       name,
       email,
       password,
@@ -61,7 +58,7 @@ describe('AuthenticateUser', () => {
     const email = 'johndoe@example.com';
     const password = '123456';
 
-    await createUser.execute({
+    await fakeUsersRepository.create({
       name,
       email,
       password,
