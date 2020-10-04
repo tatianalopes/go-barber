@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useState, useContext, useEffect } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../services/api';
@@ -25,6 +31,7 @@ interface AuthContextData {
   loading: boolean;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  updateUser(user: User): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -36,7 +43,8 @@ const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
       const [token, user] = await AsyncStorage.multiGet([
-        '@GoBarber:token', '@GoBarber:user'
+        '@GoBarber:token',
+        '@GoBarber:user',
       ]);
 
       if (token[1] && user[1]) {
@@ -49,7 +57,7 @@ const AuthProvider: React.FC = ({ children }) => {
     }
 
     loadStorageData();
-  })
+  });
 
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('sessions', {
@@ -61,7 +69,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
     await AsyncStorage.multiSet([
       ['@GoBarber:token', token],
-      ['@GoBarber:user', JSON.stringify(user)]
+      ['@GoBarber:user', JSON.stringify(user)],
     ]);
 
     api.defaults.headers.authorization = `Bearer ${token}`;
@@ -75,11 +83,24 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
+  const updateUser = useCallback(
+    async (user: User) => {
+      await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user));
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [setData, data.token],
+  );
+
   return (
-    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut}}>
+    <AuthContext.Provider
+      value={{ user: data.user, loading, signIn, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
-  )
+  );
 };
 
 function useAuth(): AuthContextData {
