@@ -31,12 +31,11 @@ export interface Provider {
 const Dashboard: React.FC = () => {
   const [providers, setProviders] = useState<Provider[]>([]);
   const { user } = useAuth();
-  const { navigate } = useNavigation()
+  const { navigate } = useNavigation();
 
   useEffect(() => {
-    api.get<Provider[]>('providers').then((response) => {
+    api.get<Provider[]>('providers').then(response => {
       setProviders(response.data);
-      console.log(response.data)
     });
   }, []);
 
@@ -66,7 +65,7 @@ const Dashboard: React.FC = () => {
 
       <ProvidersList
         data={providers}
-        keyExtractor={(provider) => provider.id}
+        keyExtractor={provider => provider.id}
         ListHeaderComponent={
           <ProvidersListTitle>Cabeleireiros</ProvidersListTitle>
         }
@@ -93,7 +92,7 @@ const Dashboard: React.FC = () => {
         )}
       />
     </Container>
-  )
+  );
 };
 
 export default Dashboard;
